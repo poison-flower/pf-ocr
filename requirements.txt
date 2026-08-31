@@ -1,0 +1,23 @@
+# Core — always needed
+natsort
+Pillow
+tqdm
+
+# --- OCR backends: install only the one(s) you actually use ---
+
+# ocr/openrouter_ocr.py (recommended) — any OpenAI-compatible API
+openai
+
+# ocr/gemini_direct_ocr.py — direct Gemini API access
+# google-genai
+
+# ocr/google_vision_ocr.py — Google Cloud Vision
+# google-cloud-vision
+
+# ocr/local_mangaocr_ocr.py — fully offline, no cloud account
+# manga-ocr
+# opencv-python
+# numpy
+
+# --- epub_builder module ---
+# Only needs natsort, already listed above.

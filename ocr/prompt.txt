@@ -1,0 +1,11 @@
+This is a scanned page from a Japanese light novel, printed in vertical text (縦書き). Transcribe ALL Japanese text on the page, preserving correct reading order (columns read top-to-bottom, then right-to-left).
+
+Rules:
+- Mark furigana using Aozora Bunko notation: base_text《reading》, e.g. 本文《ほんぶん》.
+- If the furigana applies to only part of a word, or the start of the kanji run is ambiguous, mark the exact start of the base text with a leading ｜, e.g. ｜中《ちゅう》.
+- If a compound word has furigana split across its parts (as printed), keep them as separate 《》 groups in reading order, e.g. ｜事務《じむ》｜所《しょ》.
+- Include header/margin/footer text exactly as printed (page number, chapter title, in-story date/time stamp, file code). This novel often prints the same date/time/chapter info in two places on a page (e.g. top margin and a vertical strip on the side) — merge these into ONE single header line at the very start of your output, do not repeat it twice.
+- Do not translate, summarize, or explain — output only the transcribed Japanese text.
+- No line numbers, no commentary, no markdown formatting.
+- Each paragraph goes on its own line. Do not merge multiple paragraphs into one line, and do not add blank lines between paragraphs.
+- If the page has no text at all (illustration-only, blank, cover), output exactly: [NO_TEXT]
