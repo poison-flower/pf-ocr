@@ -23,7 +23,9 @@ Expected layout (next to this script):
         YourFont.ttf              <- font to embed (optional)
       build_epub.py
       furigana.py
-      config.json                <- metadata and build settings
+
+    config.json (at the repo root, shared with the ocr module — has an
+    "epub" section with metadata and build settings)
 
 Chapter folder naming: chNN_name
     - chNN determines sort order.
@@ -53,11 +55,12 @@ start of each chapter.
 
 Usage:
     python build_epub.py
-    # (all settings are read from config.json / chapters/ / font/ next to this script)
+    # (chapters/ and font/ are read next to this script; config.json is
+    # read from the repo root, one level up)
 
     # or with explicit paths/overrides:
     python build_epub.py --pages-dir ./chapters --font-dir ./font \\
-        --config ./config.json --output ./book.epub --show-chapter-titles
+        --config ../config.json --output ./book.epub --show-chapter-titles
 
 Requirements:
     pip install natsort
@@ -79,6 +82,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from furigana import parse_page, page_to_paragraphs_html  # noqa: E402
 
 SCRIPT_DIR = Path(__file__).resolve().parent
+ROOT_DIR = SCRIPT_DIR.parent
 
 TEXT_EXT = {".txt"}
 IMAGE_EXT = {".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".png": "image/png",
@@ -592,16 +596,25 @@ def build_epub(docs, all_images, cover_path, fonts: list[Path], output_path: Pat
 # ---------------------------------------------------------------------------
 
 def load_config(config_path: Path) -> dict:
+    """Loads the shared config.json and returns its "epub" section.
+
+    Falls back to treating the whole file as the epub config if there's no
+    "epub" key, so a bare {"title": ...} style file still works.
+    """
     if not config_path.exists():
         return {}
-    return json.loads(config_path.read_text(encoding="utf-8"))
+    data = json.loads(config_path.read_text(encoding="utf-8"))
+    return data.get("epub", data) if isinstance(data, dict) else {}
 
 
 def main():
     parser = argparse.ArgumentParser(description="Build an EPUB from a chapters/ folder, with metadata from config.json")
     parser.add_argument("--pages-dir", default=str(SCRIPT_DIR / "chapters"), help="Folder with chapter subfolders")
     parser.add_argument("--font-dir", default=str(SCRIPT_DIR / "font"), help="Folder with the font to embed")
-    parser.add_argument("--config", default=str(SCRIPT_DIR / "config.json"), help="Path to config.json")
+    parser.add_argument(
+        "--config", default=str(ROOT_DIR / "config.json"),
+        help="Path to config.json with an \"epub\" section. Defaults to config.json at the repo root."
+    )
     parser.add_argument("--output", default=None, help="Path to the resulting .epub (defaults to config.json's value)")
     parser.add_argument("--cover", default=None, help="Explicit cover image path (overrides auto-detection and config.json)")
     parser.add_argument("--title", default=None, help="Override title from config.json")

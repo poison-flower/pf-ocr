@@ -3,7 +3,7 @@
 Assembles a `chapters/` folder — laid out by hand into per-chapter
 subfolders — into a finished, valid `.epub`, with furigana rendered as
 proper `<ruby>` markup, an embedded font, a cover image, and metadata from
-`config.json`.
+the `epub` section of the repo's root `config.json`.
 
 This is step 2 of the pipeline; step 1 is the [`ocr`](../ocr/README.md)
 module, which produces the per-page `.txt` files you'll sort into
@@ -12,6 +12,7 @@ module, which produces the per-page `.txt` files you'll sort into
 ## Layout
 
 ```
+config.json                  <- shared with the ocr module; see below for the "epub" section
 epub_builder/
   chapters/
     cover.jpg                <- cover image (optional, any "cover.*" directly in chapters/)
@@ -30,7 +31,6 @@ epub_builder/
     YourFont.ttf              <- font to embed (optional)
   build_epub.py
   furigana.py
-  config.json
 ```
 
 ## Chapter folder naming: `chNN_name`
@@ -38,8 +38,8 @@ epub_builder/
 - `chNN` — sequence number, determines sort order (`ch00` → `ch01` → ... →
   `ch10`; use leading zeros if you have more than 9 chapters so plain
   alphabetical sort stays correct).
-- `name` — default chapter title (override via `config.json` →
-  `chapter_titles`).
+- `name` — default chapter title (override via `config.json`'s
+  `epub.chapter_titles`).
 - Folders with `frontmatter` or `backmatter` anywhere in their name are
   **always** ignored: no title, no TOC entry — regardless of any flag or
   config setting. Their content is still included in the book, just
@@ -64,26 +64,31 @@ Files inside a folder are sorted strictly by the number in the filename
 
 ## config.json
 
+This module reads the `epub` section of the shared `config.json` at the
+repo root (copy `config.example.json` there if you haven't already):
+
 ```json
 {
-  "title": "Your Book Title",
-  "author": "Author Name",
-  "language": "ja",
-  "identifier": "",
-  "publisher": "",
-  "description": "",
-  "date": "",
-  "rights": "",
-  "series": "",
-  "series_index": "",
-  "font_family": "",
-  "vertical": false,
-  "show_chapter_titles": false,
-  "output": "book.epub",
-  "chapter_titles": {
-    "ch00_frontmatter": "",
-    "ch01_chapter00": "Chapter 00",
-    "ch08_backmatter": ""
+  "epub": {
+    "title": "Your Book Title",
+    "author": "Author Name",
+    "language": "ja",
+    "identifier": "",
+    "publisher": "",
+    "description": "",
+    "date": "",
+    "rights": "",
+    "series": "",
+    "series_index": "",
+    "font_family": "",
+    "vertical": false,
+    "show_chapter_titles": false,
+    "output": "book.epub",
+    "chapter_titles": {
+      "ch00_frontmatter": "",
+      "ch01_chapter00": "Chapter 00",
+      "ch08_backmatter": ""
+    }
   }
 }
 ```
@@ -131,10 +136,10 @@ rest are still embedded in the epub but need manual CSS edits to use.
 
 The script tries to guess a shared family name from the common part of the
 filenames (e.g. `NotoSerifJP-Regular.ttf` + `NotoSerifJP-Bold.ttf` ->
-`NotoSerifJP`). To set it explicitly, use `config.json`:
+`NotoSerifJP`). To set it explicitly, use `config.json`'s `epub` section:
 
 ```json
-{ "font_family": "MyBookFont" }
+{ "epub": { "font_family": "MyBookFont" } }
 ```
 
 **Check the font's license** before embedding it in a file you intend to
@@ -143,7 +148,8 @@ redistribution terms vary by font.
 
 ## Running
 
-Simplest case — no arguments, if everything is where it's expected:
+Simplest case — no arguments, if everything is where it's expected
+(`config.json` one level up, at the repo root):
 
 ```bash
 python build_epub.py
@@ -155,7 +161,7 @@ Or with explicit paths/overrides:
 python build_epub.py \
   --pages-dir ./chapters \
   --font-dir ./font \
-  --config ./config.json \
+  --config ../config.json \
   --output ./my_book.epub \
   --show-chapter-titles \
   --vertical

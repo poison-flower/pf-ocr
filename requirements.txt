@@ -5,16 +5,15 @@ tqdm
 
 # --- OCR backends: install only the one(s) you actually use ---
 
-# ocr/openrouter_ocr.py (recommended) — any OpenAI-compatible API
+# ocr/novel_ocr.py (recommended for light novels) — any OpenAI-compatible API
+# ocr/manga_ocr_llm.py (recommended for manga) — same API, plus translation
 openai
 
-# ocr/gemini_direct_ocr.py — direct Gemini API access
-# google-genai
-
-# ocr/google_vision_ocr.py — Google Cloud Vision
+# ocr/google_vision_ocr.py — Google Cloud Vision (pure OCR, no translation)
 # google-cloud-vision
 
-# ocr/local_mangaocr_ocr.py — fully offline, no cloud account
+# ocr/local_mangaocr_ocr.py — fully offline, no cloud account, pure OCR
+# also needed for ocr/manga_ocr_llm.py's --ahead-ocr-backend local
 # manga-ocr
 # opencv-python
 # numpy

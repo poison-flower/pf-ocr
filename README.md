@@ -1,10 +1,11 @@
-# Light Novel Scan -> EPUB
+# Scanned Light Novel / Manga -> EPUB & Translation Tooling
 
-Turns a folder of scanned light novel page images (vertical Japanese text)
-into a proper `.epub`, with furigana rendered as real `<ruby>` markup,
-illustrations kept in place, an embedded font, and epub metadata — using a
-multimodal LLM to do the OCR instead of a traditional column-segmentation
-pipeline.
+Turns a folder of scanned Japanese pages into either a proper `.epub`
+(light novels) or transcribed/translated text (manga), using a multimodal
+LLM to do the OCR instead of a traditional column-segmentation pipeline.
+Light novel and manga pages get separate tooling, since their layouts need
+genuinely different logic — dense running prose vs. scattered speech
+bubbles that benefit from translation, a glossary, and cross-page context.
 
 ## Pipeline
 
@@ -12,48 +13,63 @@ pipeline.
 scanned page images
         │
         ▼
-   ocr/ module          → transcribes each page into pages_txt/<name>.txt
+   ocr/ module          → transcribes (or translates) each page into
+                            pages_txt/<name>.txt
         │
         ▼
-  (manual step)          → sort the .txt files (and any illustration
-                            images) into chapters/chNN_name/ folders
+  (manual step,          → sort the .txt files (and any illustration
+   light novel only)       images) into chapters/chNN_name/ folders
         │
         ▼
 epub_builder/ module     → assembles chapters/ into a finished .epub
+                            (light novel only — manga output is meant for
+                            your own typesetting workflow instead)
 ```
 
 1. **[`ocr/`](ocr/README.md)** — batch-OCRs scanned pages into per-page
-   `.txt` files. Several backends are available (a multimodal LLM via any
-   OpenAI-compatible API is the recommended default; Google Cloud Vision
-   and a fully offline `manga-ocr` pipeline are also included).
-2. **Manual sorting** — split the resulting pages into chapter folders
-   (`ch00_frontmatter/`, `ch01_chapter00/`, ...), optionally dropping in a
-   `cover.jpg` and illustration images alongside the `.txt` files. This
-   step is manual because automatically detecting chapter boundaries from
-   OCR'd headers turned out to be unreliable — folder structure is simple
-   and unambiguous instead.
+   `.txt` files, or translates them directly. `novel_ocr.py` (light novel)
+   and `manga_ocr_llm.py` (manga) are the recommended entry points, both
+   via any OpenAI-compatible API; `google_vision_ocr.py` (Google Cloud
+   Vision) and `local_mangaocr_ocr.py` (fully offline `manga-ocr`) are
+   pure-OCR alternatives with no translation.
+2. **Manual sorting** (light novel only) — split the resulting pages into
+   chapter folders (`ch00_frontmatter/`, `ch01_chapter00/`, ...), optionally
+   dropping in a `cover.jpg` and illustration images alongside the `.txt`
+   files. This step is manual because automatically detecting chapter
+   boundaries from OCR'd headers turned out to be unreliable — folder
+   structure is simple and unambiguous instead.
 3. **[`epub_builder/`](epub_builder/README.md)** — assembles the sorted
    `chapters/` folder into a valid `.epub`: furigana notation becomes
    `<ruby>` markup, images are placed inline, a font from `font/` gets
-   embedded, and metadata comes from `config.json`.
+   embedded, and metadata comes from the root `config.json`.
+
+Both modules read their settings from a single `config.json` at the repo
+root (copy `config.example.json` to get started) — see each module's own
+README for the exact fields.
 
 See each module's own README for setup and usage details.
 
 ## Quick start
 
 ```bash
-# 1. OCR
+# 0. One-time setup: copy the shared config and fill it in
+cp config.example.json config.json
+# fill in ocr.api_key / ocr.base_url / ocr.model, epub.title / epub.author / ...
+
+# 1a. OCR a light novel
 cd ocr
 pip install openai pillow natsort tqdm
-cp config.example.json config.json   # fill in api_key / base_url / model
-python openrouter_ocr.py --input /path/to/scans --output ./out
+python novel_ocr.py --input /path/to/scans --output ./out
 
-# 2. Sort ./out/pages_txt/*.txt by hand into epub_builder/chapters/chNN_name/
+# 1b. ...or OCR/translate manga instead
+python manga_ocr_llm.py --input /path/to/scans --output ./out
+python manga_ocr_llm.py --input /path/to/scans --output ./out --translate --target-lang Russian
 
-# 3. Build the epub
+# 2. (light novel) Sort ./out/pages_txt/*.txt by hand into epub_builder/chapters/chNN_name/
+
+# 3. (light novel) Build the epub
 cd ../epub_builder
 pip install natsort
-cp config.example.json config.json   # fill in title / author / ...
 python build_epub.py
 ```
 
@@ -62,7 +78,7 @@ python build_epub.py
 This repository contains only the **tooling**. It is not meant to, and
 should not, be used to host or distribute:
 - scanned page images,
-- OCR'd text extracted from a copyrighted book,
+- OCR'd or translated text extracted from a copyrighted book,
 - or a resulting `.epub` file,
 
 for any book you don't hold the rights to. The `.gitignore` in this repo

@@ -1,0 +1,40 @@
+This is a scanned page from a Japanese manga. Text is split across speech
+bubbles, thought bubbles, narration boxes, and sound effects (SFX) rather
+than running prose.
+
+Instead of transcribing the Japanese, TRANSLATE all text on the page into
+{target_language}. Output a numbered list, one entry per bubble/box/SFX, in
+manga reading order:
+- Panels are read right-to-left, top-to-bottom.
+- Within a panel, bubbles are read right-to-left, top-to-bottom, following
+  the natural flow implied by tail direction / speaker position where it's
+  ambiguous.
+
+Format each entry exactly as:
+N. [TYPE] translated text
+
+Where TYPE is one of:
+- DIALOGUE — normal speech-bubble text
+- THOUGHT — thought-bubble text (usually a cloud-shaped bubble)
+- NARRATION — caption/narration box text (usually a square/rectangular box)
+- SFX — a sound effect drawn directly on the art, not inside a bubble
+
+Rules:
+- Translate naturally and idiomatically into {target_language} — don't
+  produce a stiff, literal word-for-word rendering. Preserve each
+  character's tone/register (casual, formal, rude, childish, archaic, etc.)
+  as far as {target_language} allows.
+- For SFX, prefer a natural {target_language} equivalent sound effect over a
+  literal translation when a well-known one exists (e.g. a heartbeat SFX ->
+  "thump thump" rather than a literal gloss); if there's no good
+  equivalent, transliterate the Japanese reading instead of translating it
+  literally.
+- Keep honorifics (-san, -kun, -chan, senpai, etc.) untranslated if
+  {target_language} has no natural equivalent, unless the whole line reads
+  better without them — use your judgment.
+- Do not include the original Japanese text, romaji, or any commentary —
+  output only the translated line for each entry.
+- Treat each bubble/box/SFX as ONE entry, even if it spans multiple lines
+  inside the art — join it into a single line for that entry.
+- If the page has no text at all (splash art, blank, cover), output
+  exactly: [NO_TEXT]

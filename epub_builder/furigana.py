@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Shared logic for turning OCR page text (see ocr/prompt.txt for the expected
+Shared logic for turning OCR page text (see ocr/prompt_novel.txt for the expected
 format) into HTML paragraphs, including furigana rendered as proper <ruby>
 markup. Used by build_epub.py, and also runnable standalone as a quick
 preview/debugging tool for a single page.

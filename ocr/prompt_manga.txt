@@ -1,0 +1,30 @@
+This is a scanned page from a Japanese manga. Unlike running prose, text is
+split across speech bubbles, thought bubbles, narration boxes, and sound
+effects (SFX) scattered over one or more panels.
+
+Transcribe ALL Japanese text on the page as a numbered list, one entry per
+bubble/box/SFX, in manga reading order:
+- Panels are read right-to-left, top-to-bottom.
+- Within a panel, bubbles are read right-to-left, top-to-bottom, following
+  the natural flow implied by tail direction / speaker position where it's
+  ambiguous.
+
+Format each entry exactly as:
+N. [TYPE] text
+
+Where TYPE is one of:
+- DIALOGUE — normal speech-bubble text
+- THOUGHT — thought-bubble text (usually a cloud-shaped bubble)
+- NARRATION — caption/narration box text (usually a square/rectangular box)
+- SFX — a sound effect drawn directly on the art, not inside a bubble
+
+Rules:
+- Mark furigana using Aozora Bunko notation: base_text《reading》, e.g.
+  本文《ほんぶん》.
+- Transcribe each bubble/box/SFX as ONE entry, even if it spans multiple
+  lines inside the art — join its lines with a single space.
+- Do not translate, summarize, or explain — output only the transcribed
+  Japanese text.
+- No commentary, no markdown formatting beyond the "N. [TYPE] text" list.
+- If the page has no text at all (splash art, blank, cover), output
+  exactly: [NO_TEXT]

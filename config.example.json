@@ -1,0 +1,35 @@
+{
+  "ocr": {
+    "api_key": "PUT_YOUR_API_KEY_HERE",
+    "base_url": "https://your-provider.example.com/v1",
+    "model": "google/gemini-3.7-flash",
+    "temperature": 0,
+    "max_tokens": null,
+    "top_p": null,
+    "reasoning_effort": null
+  },
+  "vision": {
+    "credentials": ""
+  },
+  "epub": {
+    "title": "Your Book Title",
+    "author": "Author Name",
+    "language": "ja",
+    "identifier": "",
+    "publisher": "",
+    "description": "",
+    "date": "",
+    "rights": "",
+    "series": "",
+    "series_index": "",
+    "font_family": "",
+    "vertical": false,
+    "show_chapter_titles": false,
+    "output": "book.epub",
+    "chapter_titles": {
+      "ch00_frontmatter": "",
+      "ch01_chapter00": "Chapter 00",
+      "ch08_backmatter": ""
+    }
+  }
+}

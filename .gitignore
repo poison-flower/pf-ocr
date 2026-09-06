@@ -1,0 +1,39 @@
+# --- Python ---
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+*.egg-info/
+
+# --- Secrets / personal settings ---
+# The real config file contains API keys or book-specific metadata.
+# Only config.example.json is meant to be committed.
+/config.json
+
+# The real glossary is book-specific content (character names, terms).
+# Only glossary.example.md is meant to be committed.
+/ocr/glossary.md
+
+# --- Generated OCR output ---
+out/
+pages_txt/
+combined.md
+
+# --- Request/response logs (debugging only, can contain full prompts) ---
+/logs/
+
+# --- Book content: scans, sorted chapters, fonts, and the built epub ---
+# This repo is tooling only — never commit someone else's copyrighted
+# book pages, extracted text, embedded fonts, or the resulting epub.
+epub_builder/chapters/*
+!epub_builder/chapters/.gitkeep
+epub_builder/font/*
+!epub_builder/font/.gitkeep
+*.epub
+
+# --- OS / editor cruft ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
